@@ -18,9 +18,17 @@ const app = {};
 // };
 
 // testing file system
-data.create('test', 'newFile', {name: 'Bangladesh', lang: 'bangla'}, (err) => {
-    console.log('error was', err);
-})
+// data.create('test', 'newFile', {name: 'Bangladesh', lang: 'bangla'}, (err) => {
+//     console.log('error was', err);
+// })
+
+// data.read('test', 'newFile', (err, data) => {
+//     console.log(err);
+// })
+
+// data.delete('test', 'newFile', (err) => {
+
+// })
 
 // create server
 app.createServer = () => {
