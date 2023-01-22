@@ -1,47 +1,32 @@
 /*
-* Title: Uptime Monitoring Application
-* Desc: A Restful API to monitor up or down time of user defined links
-*/
-
+ * Title: Uptime Monitoring Application
+ * Description: A RESTFul API to monitor up or down time of user defined links
+ * Author: Sumit Saha ( Learn with Sumit )
+ * Date: 11/15/2020
+ *
+ */
 // dependencies
 const http = require('http');
 const { handleReqRes } = require('./helpers/handleReqRes');
-const environment = require('./helpers/environments')
-const data = require('./lib/data')
 
-// app object or module scafolding
+// app object - module scaffolding
 const app = {};
 
-// configurations
-// app.config = {
-//     port: 3000
-// };
-
-// testing file system
-// data.create('test', 'newFile', {name: 'Bangladesh', lang: 'bangla'}, (err) => {
-//     console.log('error was', err);
-// })
-
-// data.read('test', 'newFile', (err, data) => {
-//     console.log(err);
-// })
-
-// data.delete('test', 'newFile', (err) => {
-
-// })
+// configuration
+app.config = {
+    port: 3000,
+};
 
 // create server
 app.createServer = () => {
     const server = http.createServer(app.handleReqRes);
-
-    server.listen(environment.port, () => {
-        console.log(`environment variable is ${environment.envName}`)
-        console.log(`listening to port ${environment.port}`);
+    server.listen(app.config.port, () => {
+        console.log(`listening to port ${app.config.port}`);
     });
-}
+};
 
-// handle request, response
+// handle Request Response
 app.handleReqRes = handleReqRes;
 
-// start server
+// start the server
 app.createServer();
