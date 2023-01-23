@@ -162,6 +162,11 @@ handler._token.delete = (requestProperties, callback) => {
                     }
                 }) 
             }
+            else {
+                callback(400, {
+                    'error': 'user token not founded'
+                })
+            }
         })
     }
     else {
