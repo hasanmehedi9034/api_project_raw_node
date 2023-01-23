@@ -51,7 +51,7 @@ handler._token.post = (requestProperties, callback) => {
                 // store the token
                 data.create('tokens', tokenId, tokenObject, (err) => {
                     if (!err) {
-                        callback(200, tokenObject);
+                        callback(200, userData);
                     }
                     else {
                         callback(500, {
@@ -79,7 +79,6 @@ handler._token.get = (requestProperties, callback) => {
     
     // check the token id number is valid
     const id = typeof requestProperties.queryStringObject.id === 'string' && requestProperties.queryStringObject.id.trim().length >= 20 ? requestProperties.queryStringObject.id :  false;
-
     if(id) {
         // find the token
         data.read('tokens', id, (err, tokenData) => {
@@ -105,13 +104,71 @@ handler._token.get = (requestProperties, callback) => {
 
 
 handler._token.put = (requestProperties, callback) => {
+    const id = typeof requestProperties.body.id === 'string' && requestProperties.body.id.trim().length >= 20 ? requestProperties.body.id :  false;
+    const extend = typeof requestProperties.body.extend === 'boolean' && requestProperties.body.extend == true ? true : false;
 
+    if (id && extend) {
+        data.read('tokens', id, (err, tokenData) => {
 
+            let tokenObject = parseJSON(tokenData);
+            console.log(tokenObject)
+
+            if (tokenObject.expires > Date.now()) {
+                tokenObject.expires = Date.now() + (60 * 60 * 1000);
+                // store the updated token
+                data.update('tokens', id, tokenObject, (err) => {
+                    if (!err) {
+                        callback(200, tokenObject);
+                    }
+                    else {
+                        callback(500, {
+                            'error': 'server side error, token updated fail'
+                        })
+                    }
+                })
+            }
+            else {
+                callback(404, {
+                    'error': 'token already expired'
+                })
+            }
+        })
+    }
+    else {
+        callback(400, {
+            'error': 'Requested token was not found'
+        })
+    }
 }
 
 
 handler._token.delete = (requestProperties, callback) => {
-    
+    const id = typeof requestProperties.queryStringObject.id === 'string' && requestProperties.queryStringObject.id.trim().length >= 20 ? requestProperties.queryStringObject.id :  false;
+
+    if (id) {
+        // find phone or user
+        data.read('tokens', id, (err, userData) => {
+            if (!err && userData) {
+                data.delete('tokens', id, (err) => {
+                    if (!err) {
+                        callback(200, {
+                            'message': 'token was deleted successfully'
+                        })
+                    }
+                    else {
+                        callback(400, {
+                            'message': 'user token not found'
+                        })
+                    }
+                }) 
+            }
+        })
+    }
+    else {
+        callback(400, {
+            'error': 'user token not founded'
+        })
+    }
 }
 
 
